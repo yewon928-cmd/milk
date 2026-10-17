@@ -1,0 +1,908 @@
+/* ==========================================================================
+   우유 급식 확인 보드 (Milk Submission Board) - style.css
+   교실 TV, 스마트 전자칠판 및 태블릿 최적화 스타일
+   ========================================================================== */
+
+:root {
+  --font-family-base: 'Noto Sans KR', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-family-display: 'Jua', 'Noto Sans KR', sans-serif;
+
+  /* 밀크 테마 컬러 팔레트 */
+  --milk-bg-top: #f0f7ff;
+  --milk-bg-bottom: #e0edfd;
+  --milk-white: #ffffff;
+  --milk-cream: #fffdfa;
+  
+  /* 파란색 상태 (제출 완료) */
+  --blue-primary: #2563eb;
+  --blue-secondary: #1d4ed8;
+  --blue-hover: #1e40af;
+  --blue-light: #eff6ff;
+  --blue-border: #93c5fd;
+  
+  /* 텍스트 & 미제출 타일 컬러 */
+  --tile-unsubmitted-bg: #ffffff;
+  --tile-unsubmitted-border: #cbd5e1;
+  --tile-unsubmitted-text: #1e293b;
+  --tile-number-bg: #f1f5f9;
+  --tile-number-text: #475569;
+
+  /* UI 액센트 */
+  --accent-gold: #f59e0b;
+  --accent-green: #10b981;
+  --danger-red: #ef4444;
+  
+  /* 그림자 & 반경 */
+  --radius-sm: 8px;
+  --radius-md: 14px;
+  --radius-lg: 20px;
+  --radius-full: 9999px;
+  --shadow-sm: 0 2px 4px rgba(37, 99, 235, 0.06);
+  --shadow-md: 0 6px 16px rgba(37, 99, 235, 0.1);
+  --shadow-lg: 0 12px 28px rgba(37, 99, 235, 0.16);
+  --shadow-glow: 0 0 22px rgba(37, 99, 235, 0.4);
+}
+
+/* 리셋 & 기본 설정 */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  -webkit-tap-highlight-color: transparent;
+}
+
+html, body {
+  width: 100%;
+  height: 100%;
+  min-height: 100vh;
+  font-family: var(--font-family-base);
+  background: linear-gradient(175deg, var(--milk-bg-top) 0%, var(--milk-bg-bottom) 100%);
+  color: #1e293b;
+  overflow-x: hidden;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+/* 전체 앱 래퍼 */
+.app-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  max-width: 1700px;
+  margin: 0 auto;
+  padding: 16px 24px 20px;
+  gap: 14px;
+}
+
+/* ==========================================================================
+   1. 상단 헤더
+   ========================================================================== */
+.board-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--milk-white);
+  padding: 14px 24px;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  border: 2px solid #e2e8f0;
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+}
+
+.milk-logo-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.milk-icon {
+  font-size: 2.8rem;
+  line-height: 1;
+  filter: drop-shadow(0 4px 6px rgba(37, 99, 235, 0.2));
+  animation: floatMilk 3s ease-in-out infinite;
+}
+
+@keyframes floatMilk {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-4px); }
+}
+
+.title-group .main-title {
+  font-family: var(--font-family-display);
+  font-size: 2.1rem;
+  color: #1e3a8a;
+  letter-spacing: -0.5px;
+  line-height: 1.15;
+}
+
+.title-group .sub-title {
+  font-size: 0.95rem;
+  color: #64748b;
+  font-weight: 500;
+  margin-top: 2px;
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.today-date-badge {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: #f1f5f9;
+  padding: 8px 16px;
+  border-radius: var(--radius-full);
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #334155;
+  border: 1px solid #cbd5e1;
+}
+
+.header-btn-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* 버튼 공통 */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 18px;
+  font-family: var(--font-family-base);
+  font-size: 1rem;
+  font-weight: 700;
+  border-radius: var(--radius-md);
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: var(--shadow-sm);
+  white-space: nowrap;
+}
+
+.btn:active {
+  transform: scale(0.97);
+}
+
+.btn-icon {
+  font-size: 1.15rem;
+  line-height: 1;
+}
+
+.btn-sub {
+  background: #f8fafc;
+  color: #475569;
+  border: 1px solid #cbd5e1;
+}
+
+.btn-sub:hover {
+  background: #e2e8f0;
+  color: #1e293b;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+  color: #ffffff;
+  border: 2px solid #1e40af;
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+}
+
+.btn-primary:hover {
+  background: linear-gradient(135deg, #1d4ed8 0%, #1e40af 100%);
+  box-shadow: 0 6px 18px rgba(37, 99, 235, 0.4);
+}
+
+.btn-save {
+  font-size: 1.1rem;
+  padding: 12px 22px;
+}
+
+.btn-outline {
+  background: #ffffff;
+  color: #475569;
+  border: 2px solid #cbd5e1;
+}
+
+.btn-outline:hover {
+  background: #f1f5f9;
+  color: #1e293b;
+  border-color: #94a3b8;
+}
+
+/* ==========================================================================
+   2. 상단 현황 대시보드 & 우유 게이지
+   ========================================================================== */
+.status-dashboard-card {
+  background: var(--milk-white);
+  border-radius: var(--radius-lg);
+  padding: 14px 24px;
+  border: 2px solid #e2e8f0;
+  box-shadow: var(--shadow-md);
+}
+
+.gauge-info-row {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.count-box {
+  display: flex;
+  flex-direction: column;
+  min-width: 140px;
+}
+
+.count-label {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #64748b;
+  letter-spacing: 0.5px;
+}
+
+.count-numbers {
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
+}
+
+.submitted-count {
+  font-family: var(--font-family-display);
+  font-size: 2.8rem;
+  font-weight: 800;
+  color: var(--blue-primary);
+  line-height: 1;
+}
+
+.total-count {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #94a3b8;
+}
+
+/* 우유 게이지 트랙 */
+.milk-gauge-wrapper {
+  flex: 1;
+}
+
+.gauge-track {
+  width: 100%;
+  height: 38px;
+  background: #e2e8f0;
+  border-radius: var(--radius-full);
+  overflow: hidden;
+  position: relative;
+  box-shadow: inset 0 3px 6px rgba(0, 0, 0, 0.1);
+  border: 3px solid #ffffff;
+}
+
+.gauge-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #60a5fa 0%, #2563eb 50%, #1d4ed8 100%);
+  border-radius: var(--radius-full);
+  transition: width 0.45s cubic-bezier(0.34, 1.56, 0.64, 1);
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  min-width: 20px;
+}
+
+.gauge-droplet {
+  margin-right: 6px;
+  font-size: 1.1rem;
+  filter: drop-shadow(0 2px 3px rgba(0,0,0,0.2));
+  animation: bounceDroplet 1.6s ease-in-out infinite;
+}
+
+@keyframes bounceDroplet {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.2); }
+}
+
+.percentage-box {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  min-width: 160px;
+}
+
+.percentage-value {
+  font-family: var(--font-family-display);
+  font-size: 2.2rem;
+  font-weight: 800;
+  color: #1e3a8a;
+  line-height: 1;
+}
+
+.percentage-status {
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: #64748b;
+  margin-top: 2px;
+}
+
+.main-actions-group {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* ==========================================================================
+   3. 학생 22명 타일 그리드
+   ========================================================================== */
+.students-grid-section {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.students-grid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 14px;
+  width: 100%;
+}
+
+/* 개별 학생 타일 버튼 */
+.student-tile {
+  background: var(--tile-unsubmitted-bg);
+  border: 3px solid var(--tile-unsubmitted-border);
+  border-radius: var(--radius-lg);
+  padding: 16px 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  min-height: 82px;
+  cursor: pointer;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.04);
+  transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.student-tile:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.08);
+  border-color: #94a3b8;
+}
+
+.student-tile:active {
+  transform: scale(0.96);
+}
+
+/* 타일 내부: 번호 배지 */
+.tile-num-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  background: var(--tile-number-bg);
+  color: var(--tile-number-text);
+  border-radius: var(--radius-md);
+  font-family: var(--font-family-display);
+  font-size: 1.35rem;
+  font-weight: 800;
+  flex-shrink: 0;
+  transition: all 0.2s ease;
+}
+
+/* 타일 내부: 이름 */
+.tile-name {
+  flex: 1;
+  font-family: var(--font-family-base);
+  font-size: 1.55rem;
+  font-weight: 800;
+  color: var(--tile-unsubmitted-text);
+  text-align: center;
+  letter-spacing: -0.3px;
+  word-break: keep-all;
+  transition: color 0.2s ease;
+}
+
+/* 타일 내부: 상태 아이콘 (제출 시 나타나는 웃는 얼굴 😊) */
+.tile-face-icon {
+  font-size: 2rem;
+  line-height: 1;
+  display: none;
+  flex-shrink: 0;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.25));
+  animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+@keyframes popIn {
+  0% { transform: scale(0) rotate(-20deg); opacity: 0; }
+  70% { transform: scale(1.3) rotate(10deg); }
+  100% { transform: scale(1) rotate(0deg); opacity: 1; }
+}
+
+/* ==========================================================================
+   제출완료 상태 스타일 (요청 사항: 파란색 배경 + 웃는 얼굴 표시 😊)
+   ========================================================================== */
+.student-tile.submitted {
+  background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+  border-color: #1e40af;
+  box-shadow: 0 8px 20px rgba(37, 99, 235, 0.35);
+}
+
+.student-tile.submitted .tile-num-badge {
+  background: rgba(255, 255, 255, 0.25);
+  color: #ffffff;
+}
+
+.student-tile.submitted .tile-name {
+  color: #ffffff;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.25);
+}
+
+.student-tile.submitted .tile-face-icon {
+  display: inline-block;
+}
+
+/* 미제출 상태 (요청 사항: 하얀색 타일) */
+.student-tile.unsubmitted {
+  background: #ffffff;
+  border-color: #cbd5e1;
+}
+
+/* ==========================================================================
+   4. 하단 학생 이름 입력 및 관리 패널
+   ========================================================================== */
+.bottom-editor-bar {
+  background: var(--milk-white);
+  border-radius: var(--radius-lg);
+  border: 2px solid #e2e8f0;
+  padding: 14px 24px;
+  box-shadow: var(--shadow-sm);
+}
+
+.editor-bar-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.editor-title-wrap {
+  display: flex;
+  flex-direction: column;
+}
+
+.editor-badge {
+  font-family: var(--font-family-display);
+  font-size: 1.15rem;
+  color: #1e3a8a;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.editor-desc {
+  font-size: 0.85rem;
+  color: #64748b;
+  font-weight: 500;
+}
+
+.edit-student-form {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.form-group-inline {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.form-label {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #475569;
+}
+
+.form-select, .form-input {
+  height: 44px;
+  padding: 8px 14px;
+  font-family: var(--font-family-base);
+  font-size: 1.05rem;
+  font-weight: 700;
+  border: 2px solid #cbd5e1;
+  border-radius: var(--radius-md);
+  background: #ffffff;
+  color: #1e293b;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.form-select {
+  min-width: 105px;
+  cursor: pointer;
+}
+
+.form-input {
+  width: 160px;
+}
+
+.form-select:focus, .form-input:focus {
+  border-color: var(--blue-primary);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.2);
+}
+
+.btn-action {
+  background: #10b981;
+  color: #ffffff;
+  border: 2px solid #059669;
+}
+
+.btn-action:hover {
+  background: #059669;
+}
+
+.btn-subtle {
+  background: #f1f5f9;
+  color: #334155;
+  border: 1px solid #cbd5e1;
+}
+
+.btn-subtle:hover {
+  background: #e2e8f0;
+  color: #0f172a;
+}
+
+/* ==========================================================================
+   5. 모달 (설정 및 일괄 수정)
+   ========================================================================== */
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.55);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 16px;
+  opacity: 1;
+  visibility: visible;
+  transition: opacity 0.2s, visibility 0.2s;
+}
+
+.modal-backdrop.hidden {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.modal-card {
+  background: #ffffff;
+  width: 100%;
+  max-width: 680px;
+  max-height: 90vh;
+  border-radius: var(--radius-lg);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  animation: modalSlideUp 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes modalSlideUp {
+  from { transform: translateY(20px) scale(0.97); opacity: 0; }
+  to { transform: translateY(0) scale(1); opacity: 1; }
+}
+
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px 24px;
+  border-bottom: 2px solid #f1f5f9;
+  background: #f8fafc;
+}
+
+.modal-title-wrap {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.modal-icon {
+  font-size: 1.5rem;
+}
+
+.modal-title {
+  font-family: var(--font-family-display);
+  font-size: 1.45rem;
+  color: #1e293b;
+}
+
+.btn-close-modal {
+  background: transparent;
+  border: none;
+  font-size: 2rem;
+  line-height: 1;
+  color: #94a3b8;
+  cursor: pointer;
+  transition: color 0.15s;
+}
+
+.btn-close-modal:hover {
+  color: #0f172a;
+}
+
+.modal-body {
+  padding: 20px 24px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.guide-box {
+  background: #eff6ff;
+  border-left: 4px solid var(--blue-primary);
+  border-radius: var(--radius-sm);
+  padding: 12px 16px;
+}
+
+.guide-box h3 {
+  font-size: 1rem;
+  color: #1d4ed8;
+  margin-bottom: 4px;
+}
+
+.guide-box p {
+  font-size: 0.9rem;
+  color: #3b82f6;
+  margin-bottom: 6px;
+}
+
+.guide-tabs-list {
+  padding-left: 20px;
+  font-size: 0.88rem;
+  color: #1e3a8a;
+}
+
+.input-field-block {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.input-title {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #1e293b;
+}
+
+.modal-input {
+  width: 100%;
+  height: 46px;
+  padding: 8px 14px;
+  font-size: 1rem;
+  border: 2px solid #cbd5e1;
+  border-radius: var(--radius-md);
+  outline: none;
+}
+
+.modal-input:focus {
+  border-color: var(--blue-primary);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.2);
+}
+
+.field-help {
+  font-size: 0.82rem;
+  color: #64748b;
+}
+
+.code-guide-section {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.code-guide-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: #1e293b;
+}
+
+.btn-copy {
+  background: #e0f2fe;
+  color: #0369a1;
+  border: 1px solid #bae6fd;
+  padding: 6px 12px;
+  font-size: 0.85rem;
+}
+
+.btn-copy:hover {
+  background: #bae6fd;
+}
+
+.code-guide-desc {
+  font-size: 0.82rem;
+  color: #64748b;
+}
+
+.code-preview {
+  width: 100%;
+  height: 180px;
+  background: #0f172a;
+  color: #e2e8f0;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 0.82rem;
+  padding: 12px;
+  border-radius: var(--radius-md);
+  border: 1px solid #334155;
+  resize: vertical;
+}
+
+.modal-footer {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+  padding: 16px 24px;
+  background: #f8fafc;
+  border-top: 2px solid #f1f5f9;
+}
+
+/* 22명 일괄 수정 모달 */
+.batch-guide {
+  font-size: 0.92rem;
+  color: #475569;
+  line-height: 1.5;
+}
+
+.batch-textarea {
+  width: 100%;
+  border: 2px solid #cbd5e1;
+  border-radius: var(--radius-md);
+  padding: 12px 14px;
+  font-size: 1.05rem;
+  line-height: 1.6;
+  font-family: var(--font-family-base);
+  outline: none;
+}
+
+.batch-textarea:focus {
+  border-color: var(--blue-primary);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.2);
+}
+
+.batch-stats {
+  font-size: 0.9rem;
+  color: #64748b;
+  text-align: right;
+}
+
+/* ==========================================================================
+   6. 토스트 알림
+   ========================================================================== */
+.toast-notification {
+  position: fixed;
+  bottom: 95px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(15, 23, 42, 0.92);
+  color: #ffffff;
+  padding: 14px 26px;
+  border-radius: var(--radius-full);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 1.15rem;
+  font-weight: 700;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+  z-index: 2000;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  pointer-events: none;
+}
+
+.toast-notification.hidden {
+  opacity: 0;
+  transform: translate(-50%, 20px);
+}
+
+.toast-icon {
+  font-size: 1.4rem;
+}
+
+/* ==========================================================================
+   7. 콘페티 캔버스
+   ========================================================================== */
+.confetti-canvas {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  z-index: 1500;
+}
+
+/* ==========================================================================
+   반응형 및 TV 해상도 최적화
+   ========================================================================== */
+@media (max-width: 1280px) {
+  .students-grid {
+    grid-template-columns: repeat(5, 1fr);
+  }
+}
+
+@media (max-width: 1024px) {
+  .students-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+  .gauge-info-row {
+    flex-wrap: wrap;
+  }
+  .milk-gauge-wrapper {
+    order: 3;
+    width: 100%;
+    flex: auto;
+  }
+}
+
+@media (max-width: 768px) {
+  .app-container {
+    padding: 12px;
+    gap: 10px;
+  }
+  .board-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+  .header-right {
+    width: 100%;
+    justify-content: space-between;
+  }
+  .students-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+  }
+  .student-tile {
+    min-height: 70px;
+    padding: 10px;
+  }
+  .tile-name {
+    font-size: 1.25rem;
+  }
+  .tile-num-badge {
+    width: 34px;
+    height: 34px;
+    font-size: 1.15rem;
+  }
+  .editor-bar-inner {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .edit-student-form {
+    justify-content: space-between;
+  }
+  .form-input {
+    width: 120px;
+  }
+}
+
+@media (max-width: 480px) {
+  .students-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}

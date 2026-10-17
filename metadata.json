@@ -1,0 +1,6 @@
+{
+  "name": "우유 급식 확인 보드",
+  "description": "교실 TV 및 전자칠판용 터치형 우유 급식 확인 보드. 구글 스프레드시트 연동 및 실시간 현황 체크 지원.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

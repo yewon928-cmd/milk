@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>우유 급식 확인 보드</title>
+  <meta name="description" content="교실 TV 및 전자칠판용 터치형 우유 급식 확인 보드. 원터치 체크 및 구글 스프레드시트 실시간 연동." />
+  <meta property="og:title" content="우유 급식 확인 보드" />
+  <meta property="og:description" content="교실 TV 및 전자칠판용 터치형 우유 급식 확인 보드" />
+  <meta property="og:type" content="website" />
+  <meta name="twitter:card" content="summary_large_image" />
+  
+  <!-- Pretendard / Google Font -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Jua&family=Noto+Sans+KR:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  
+  <!-- 스타일시트 -->
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <!-- 메인 컨테이너 -->
+  <div class="app-container">
+    
+    <!-- 상단 헤더 -->
+    <header class="board-header">
+      <div class="header-left">
+        <div class="milk-logo-wrapper">
+          <span class="milk-icon">🥛</span>
+          <div class="title-group">
+            <h1 class="main-title">우유 급식 확인</h1>
+            <p class="sub-title">오늘의 신선한 우유를 맛있게 마시고 내 이름을 탭하세요!</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="header-right">
+        <div class="header-btn-group">
+          <button type="button" class="btn btn-sub" id="btnAudioToggle" title="효과음 켜기/끄기">
+            <span class="btn-icon">🔊</span>
+            <span class="btn-text">소리</span>
+          </button>
+          <button type="button" class="btn btn-sub" id="btnFullscreen" title="전체화면 전환">
+            <span class="btn-icon">🖥️</span>
+            <span class="btn-text">전체화면</span>
+          </button>
+          <button type="button" class="btn btn-sub" id="btnSettings" title="구글 시트 연동 설정">
+            <span class="btn-icon">⚙️</span>
+            <span class="btn-text">시트 설정</span>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- 진행 상황 & 조작 배너 (제출률 게이지) -->
+    <section class="status-dashboard-card">
+      <div class="gauge-info-row">
+        <div class="count-box">
+          <span class="count-label">제출 현황</span>
+          <div class="count-numbers">
+            <span class="submitted-count" id="submittedCount">0</span>
+            <span class="total-count">/ <span id="totalStudentsCount">22</span>명</span>
+          </div>
+        </div>
+
+        <div class="milk-gauge-wrapper">
+          <div class="gauge-track">
+            <div class="gauge-fill" id="gaugeFill" style="width: 0%;">
+              <span class="gauge-bubbles"></span>
+              <span class="gauge-droplet">🥛</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="percentage-box">
+          <span class="percentage-value" id="percentageValue">0%</span>
+          <span class="percentage-status" id="statusMessage">아직 마시는 중이에요</span>
+        </div>
+
+        <div class="main-actions-group">
+          <button type="button" class="btn btn-primary btn-save" id="btnSaveToSheet">
+            <span class="btn-icon">💾</span>
+            <span class="btn-text">현재 제출 현황 시트에 저장</span>
+          </button>
+          <button type="button" class="btn btn-outline" id="btnResetAll" title="오늘 체크 상태를 0명으로 초기화합니다">
+            <span class="btn-icon">🔄</span>
+            <span class="btn-text">전체 초기화</span>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- 학생 타일 그리드 (22명) -->
+    <main class="students-grid-section">
+      <div class="students-grid" id="studentsGrid" aria-label="학생 우유 급식 제출 타일 목록">
+        <!-- 1~22번 학생 타일이 JS로 렌더링됩니다 -->
+      </div>
+    </main>
+
+    <!-- 하단 학생 이름 입력 및 관리 패널 -->
+    <footer class="bottom-editor-bar">
+      <div class="editor-bar-inner">
+        <div class="editor-title-wrap">
+          <span class="editor-badge">✏️ 학생 이름 변경</span>
+          <span class="editor-desc">번호를 고르고 이름을 적은 후 [이름 저장]을 누르면 즉시 반영됩니다.</span>
+        </div>
+
+        <form id="editStudentForm" class="edit-student-form">
+          <div class="form-group-inline">
+            <label for="selectStudentNum" class="form-label">번호</label>
+            <select id="selectStudentNum" class="form-select" aria-label="수정할 학생 번호 선택">
+              <!-- 1~22번 옵션이 JS로 생성됩니다 -->
+            </select>
+          </div>
+
+          <div class="form-group-inline name-input-group">
+            <label for="inputStudentName" class="form-label">이름</label>
+            <input 
+              type="text" 
+              id="inputStudentName" 
+              class="form-input" 
+              placeholder="학생 이름 입력" 
+              maxlength="10" 
+              autocomplete="off"
+              required 
+            />
+          </div>
+
+          <button type="submit" class="btn btn-action" id="btnApplyName">
+            <span class="btn-icon">✅</span>
+            <span class="btn-text">이름 저장</span>
+          </button>
+
+          <button type="button" class="btn btn-subtle" id="btnBatchEdit">
+            <span class="btn-icon">📋</span>
+            <span class="btn-text">22명 일괄 수정</span>
+          </button>
+
+          <button type="button" class="btn btn-subtle" id="btnFetchFromSheet" title="구글 시트의 '학생명단' 탭에서 명단 불러오기">
+            <span class="btn-icon">📥</span>
+            <span class="btn-text">시트 명단 불러오기</span>
+          </button>
+        </form>
+      </div>
+    </footer>
+  </div>
+
+  <!-- 토스트 알림창 -->
+  <div id="toastNotification" class="toast-notification hidden" role="status" aria-live="polite">
+    <span class="toast-icon" id="toastIcon">🥛</span>
+    <span class="toast-message" id="toastMessage">안내 메시지</span>
+  </div>
+
+  <!-- 구글 시트 연동 설정 모달 -->
+  <div id="settingsModal" class="modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="settingsModalTitle">
+    <div class="modal-card">
+      <div class="modal-header">
+        <div class="modal-title-wrap">
+          <span class="modal-icon">⚙️</span>
+          <h2 id="settingsModalTitle" class="modal-title">구글 스프레드시트 연동 설정</h2>
+        </div>
+        <button type="button" class="btn-close-modal" id="btnCloseSettingsModal" aria-label="닫기">&times;</button>
+      </div>
+
+      <div class="modal-body">
+        <div class="guide-box">
+          <h3>📌 구글 시트 탭 구성 안내</h3>
+          <p>연동할 구글 스프레드시트에 다음 2개 탭이 사용됩니다 (자동 생성 지원):</p>
+          <ul class="guide-tabs-list">
+            <li><strong>'학생명단'</strong>: 번호, 이름</li>
+            <li><strong>'제출현황'</strong>: 과제명, 번호, 이름, 제출여부, 체크시간</li>
+          </ul>
+        </div>
+
+        <div class="input-field-block">
+          <label for="inputWebAppUrl" class="input-title">Google Apps Script 웹 앱 URL</label>
+          <input 
+            type="url" 
+            id="inputWebAppUrl" 
+            class="modal-input" 
+            placeholder="https://script.google.com/macros/s/.../exec" 
+          />
+          <p class="field-help">Google Apps Script 배포 시 생성된 웹 앱 주소를 붙여넣어 주세요. (액세스 권한: 모든 사용자)</p>
+        </div>
+
+        <div class="code-guide-section">
+          <div class="code-guide-header">
+            <span>📄 Apps Script 연동 코드 (code.gs)</span>
+            <button type="button" class="btn btn-copy" id="btnCopyCodeGs">
+              <span class="btn-icon">📋</span>
+              <span class="btn-text">코드 전체 복사</span>
+            </button>
+          </div>
+          <p class="code-guide-desc">구글 시트 메뉴 [확장 프로그램] → [Apps Script]에 붙여넣고 [배포] → [새 배포(웹 앱)]를 실행하세요.</p>
+          <textarea id="codeGsPreview" class="code-preview" readonly spellcheck="false"></textarea>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline" id="btnTestConnection">
+          <span class="btn-icon">🔍</span>
+          <span class="btn-text">연결 테스트</span>
+        </button>
+        <button type="button" class="btn btn-primary" id="btnSaveSettings">
+          <span class="btn-icon">💾</span>
+          <span class="btn-text">설정 저장하기</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 22명 일괄 수정 모달 -->
+  <div id="batchModal" class="modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="batchModalTitle">
+    <div class="modal-card">
+      <div class="modal-header">
+        <div class="modal-title-wrap">
+          <span class="modal-icon">📋</span>
+          <h2 id="batchModalTitle" class="modal-title">학생 명단 22명 일괄 수정</h2>
+        </div>
+        <button type="button" class="btn-close-modal" id="btnCloseBatchModal" aria-label="닫기">&times;</button>
+      </div>
+
+      <div class="modal-body">
+        <p class="batch-guide">
+          엑셀이나 한글 문서에서 1번부터 22번까지의 학생 이름을 줄바꿈(엔터)으로 복사하여 아래에 붙여넣으세요.<br>
+          (1행에 1명씩 총 22명이 순서대로 1~22번에 지정됩니다.)
+        </p>
+        <textarea id="textareaBatchNames" class="batch-textarea" placeholder="김민준&#10;이서아&#10;박도윤&#10;최하은&#10;..." rows="12"></textarea>
+        <div class="batch-stats">
+          현재 입력된 이름 수: <strong id="batchCountBadge">0</strong> / 22명
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline" id="btnResetDefaultNames">기본 이름으로 재설정</button>
+        <button type="button" class="btn btn-primary" id="btnSaveBatchNames">
+          <span class="btn-icon">✅</span>
+          <span class="btn-text">22명 명단 적용하기</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 축하 콘페티 캔버스 -->
+  <canvas id="confettiCanvas" class="confetti-canvas"></canvas>
+
+  <!-- 메인 스크립트 -->
+  <script src="script.js"></script>
+</body>
+</html>
